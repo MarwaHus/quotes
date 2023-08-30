@@ -3,12 +3,41 @@
  */
 package quotes;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 public class App {
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args)throws IOException {
         Quote quote = new Quote();
-        System.out.println("1/"+quote.getRandomQuote());
-        System.out.println("2/"+quote.getRandomQuote());
-    }
+        System.out.println("1/" + quote.getRandomQuote());
+        System.out.println("2/" + quote.getRandomQuote());
+
+        URL quote1 = new URL("https://favqs.com/api/qotd");
+        HttpURLConnection quoteCon = (HttpURLConnection) quote1.openConnection();
+        quoteCon.setRequestMethod("GET");
+        InputStreamReader reader = new InputStreamReader(quoteCon.getInputStream());
+        BufferedReader quoteReader = new BufferedReader(reader);
+        String quoteData = quoteReader.readLine();
+        System.out.println(quoteData);
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Quote q= gson.fromJson(quoteData, Quote.class);
+
+        File qFile = new File("app/src/main/resources/recentquotes.json");
+
+        try (FileWriter writeToDittoFile= new FileWriter(qFile,true)){
+
+            gson.toJson(q, writeToDittoFile);
+
+        }catch (IOException e){
+            System.out.println("invalid URl: "+quote1);
+            e.printStackTrace();
+        }}
+
+
 }
