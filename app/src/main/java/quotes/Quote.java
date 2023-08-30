@@ -1,5 +1,6 @@
 package quotes;
 
+import com.google.common.base.Equivalence;
 import com.google.gson.Gson;
 
 import java.io.FileReader;
@@ -13,7 +14,7 @@ public class Quote {
 
     public Quote() {
         Gson gson = new Gson();
-        try (FileReader reader = new FileReader("D:\\gradleProjects\\Quotes1\\app\\src\\main\\resources\\ recentquotes.json")) {
+        try (FileReader reader = new FileReader("app/src/main/resources/recentquotes.json")) {
             QuoteData[] data = gson.fromJson(reader, QuoteData[].class);
             quotes = new ArrayList<QuoteData>(Arrays.asList(data));
         } catch (IOException e) {
