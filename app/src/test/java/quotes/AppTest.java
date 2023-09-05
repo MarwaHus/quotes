@@ -4,17 +4,38 @@
 package quotes;
 
 import org.junit.jupiter.api.Test;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class AppTest {
+    @Test
+    public void testGetRandomQuote() {
+        Quote quote = new Quote("D:\\gradleProjects\\Quote\\app\\src\\main\\resources\\recentquotes.json");
+        assertNotNull(quote.quotes);
+        int randomIndex = (int) (Math.random() * quote.quotes.size());
+        Quote.QuoteData randomQuoteData = quote.quotes.get(randomIndex);
+        assertNotNull(randomQuoteData);
+        assertNotNull(randomQuoteData.text);
+        assertFalse(randomQuoteData.text.isEmpty());
+        assertNotNull(randomQuoteData.getAuthor());
+        assertFalse(randomQuoteData.getAuthor().isEmpty());
+    }
 
     @Test
+    public void testGetRandomQuoteFormat() {
+        Quote quote = new Quote("D:\\gradleProjects\\Quote\\app\\src\\main\\resources\\recentquotes.json");
+        assertNotNull(quote.quotes);
+        int randomIndex = (int) (Math.random() * quote.quotes.size());
+        Quote.QuoteData randomQuoteData = quote.quotes.get(randomIndex);
+        String randomQuote = "Quote : " + randomQuoteData.text + "\n - Author: " + randomQuoteData.getAuthor();
+        assertTrue(randomQuote.contains("Quote : "));
+        assertTrue(randomQuote.contains(" - Author: "));
+        assertTrue(randomQuote.contains(randomQuoteData.text));
+        assertTrue(randomQuote.contains(randomQuoteData.getAuthor()));
+    }
+
+    /////////////////////lab9
+    /*@Test
     public void testQuoteAPIData() throws IOException {
         URL quote1 = new URL("https://favqs.com/api/qotd");
         HttpURLConnection quoteCon = (HttpURLConnection) quote1.openConnection();
@@ -27,10 +48,5 @@ class AppTest {
         String quoteData = quoteReader.readLine();
         assertTrue(!quoteData.isEmpty());
         reader.close();
-    }
-
-
-
-
-
+    }*/
 }

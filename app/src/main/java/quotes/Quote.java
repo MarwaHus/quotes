@@ -1,6 +1,5 @@
 package quotes;
 
-import com.google.common.base.Equivalence;
 import com.google.gson.Gson;
 
 import java.io.FileReader;
@@ -10,13 +9,13 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class Quote {
-    private ArrayList<QuoteData> quotes;
+    ArrayList<QuoteData> quotes;
 
-    public Quote() {
+    public Quote(String filePath) {
         Gson gson = new Gson();
-        try (FileReader reader = new FileReader("app/src/main/resources/recentquotes.json")) {
+        try (FileReader reader = new FileReader(filePath)) {
             QuoteData[] data = gson.fromJson(reader, QuoteData[].class);
-            quotes = new ArrayList<QuoteData>(Arrays.asList(data));
+            quotes = new ArrayList<>(Arrays.asList(data));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -28,14 +27,13 @@ public class Quote {
         return "Quote : "+quoteData.getQuote() + "\n - Author: " + quoteData.getAuthor();
     }
 
-    private static class QuoteData {
-        private String text;
+    static class QuoteData {
+        String text;
         private String author;
 
         public String getQuote() {
             return text;
         }
-
 
         public String getAuthor() {
             return author;

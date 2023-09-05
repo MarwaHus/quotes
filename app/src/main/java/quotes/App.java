@@ -3,22 +3,15 @@
  */
 package quotes;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class App {
-
-
     public static void main(String[] args)throws IOException {
-        Quote quote = new Quote();
+       Quote quote = new Quote("./app/src/main/resources/recentquotes.json");
         System.out.println("1/" + quote.getRandomQuote());
         System.out.println("2/" + quote.getRandomQuote());
 
-        URL quote1 = new URL("https://favqs.com/api/qotd");
+       /* URL quote1 = new URL("https://favqs.com/api/qotd");
         HttpURLConnection quoteCon = (HttpURLConnection) quote1.openConnection();
         quoteCon.setRequestMethod("GET");
         InputStreamReader reader = new InputStreamReader(quoteCon.getInputStream());
@@ -37,7 +30,6 @@ public class App {
         }catch (IOException e){
             System.out.println("invalid URl: "+quote1);
             e.printStackTrace();
-        }}
-
-
+        }*/
+    }
 }
