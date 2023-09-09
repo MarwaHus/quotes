@@ -3,33 +3,62 @@
  */
 package quotes;
 
-import java.io.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class App {
-    public static void main(String[] args)throws IOException {
-       Quote quote = new Quote("./app/src/main/resources/recentquotes.json");
-        System.out.println("1/" + quote.getRandomQuote());
-        System.out.println("2/" + quote.getRandomQuote());
+    public static void main(String[] args) throws IOException {
+        //Quote quote = new Quote("./app/src/main/resources/recentquotes.json");
+       // System.out.println("1/" + quote.getRandomQuote());
+       // System.out.println("2/" + quote.getRandomQuote());
 
-       /* URL quote1 = new URL("https://favqs.com/api/qotd");
-        HttpURLConnection quoteCon = (HttpURLConnection) quote1.openConnection();
+        URL quoteUrl = new URL("https://favqs.com/api/qotd");
+        HttpURLConnection quoteCon = (HttpURLConnection) quoteUrl.openConnection();
         quoteCon.setRequestMethod("GET");
         InputStreamReader reader = new InputStreamReader(quoteCon.getInputStream());
         BufferedReader quoteReader = new BufferedReader(reader);
         String quoteData = quoteReader.readLine();
+        reader.close();
+        quoteReader.close();
         System.out.println(quoteData);
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        Quote q= gson.fromJson(quoteData, Quote.class);
 
-        File qFile = new File("app/src/main/resources/recentquotes.json");
+        JsonObject quoteJson = new Gson().fromJson(quoteData, JsonObject.class);
+        String author = quoteJson.getAsJsonObject("quote").get("author").getAsString();
+        String text = quoteJson.getAsJsonObject("quote").get("body").getAsString();
 
-        try (FileWriter writeToDittoFile= new FileWriter(qFile,true)){
+        JsonObject newQuote = new JsonObject();
+        newQuote.addProperty("author", author);
+        newQuote.addProperty("text", text);
+        newQuote.addProperty("date", System.currentTimeMillis());
 
-            gson.toJson(q, writeToDittoFile);
+        File qFile = new File("./app/src/main/resources/recentquotes.json");
+        JsonArray quotesJsonArray = new JsonArray();
 
-        }catch (IOException e){
-            System.out.println("invalid URl: "+quote1);
-            e.printStackTrace();
-        }*/
+        if (qFile.exists()) {
+            BufferedReader br = new BufferedReader(new FileReader(qFile));
+            quotesJsonArray = new Gson().fromJson(br, JsonArray.class);
+            br.close();
+        }
+
+        quotesJsonArray.add(newQuote);
+
+        try (FileWriter fileWriter = new FileWriter(qFile)) {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            gson.toJson(quotesJsonArray, fileWriter);
+        } catch (IOException e) {
+            System.out.println("error writing to file: " + e.getMessage());
+        }
     }
 }
