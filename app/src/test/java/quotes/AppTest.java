@@ -5,6 +5,12 @@ package quotes;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class AppTest {
@@ -35,7 +41,7 @@ class AppTest {
     }
 
     /////////////////////lab9
-    /*@Test
+    @Test
     public void testQuoteAPIData() throws IOException {
         URL quote1 = new URL("https://favqs.com/api/qotd");
         HttpURLConnection quoteCon = (HttpURLConnection) quote1.openConnection();
@@ -48,5 +54,5 @@ class AppTest {
         String quoteData = quoteReader.readLine();
         assertTrue(!quoteData.isEmpty());
         reader.close();
-    }*/
+    }
 }
